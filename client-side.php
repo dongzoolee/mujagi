@@ -18,7 +18,7 @@
         </script>
         <link rel="stylesheet" href="https://leed.at/leed/plug-in/highlight/styles/railscasts.css">
         <link href="https://leed.at/leed/css/font.css" rel="stylesheet" type="text/css">
-        <link href="https://leed.at/leed/css/leedMujagi.css" rel="stylesheet" type="text/css">
+        <link href="client-side.css" rel="stylesheet" type="text/css">
     </head>
 
     <body>
