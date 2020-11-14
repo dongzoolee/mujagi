@@ -1,0 +1,99 @@
+li {
+    list-style: none;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+p {
+    font-family: 'appleNeoT';
+    font-size: 6vw;
+    height: 8.5vw;
+    padding: 2vw 0 0 5vw;
+    margin: 0;
+    display: inline-block;
+}
+
+#container {
+    height: calc(100% - 12vw);
+    box-sizing: border-box;
+}
+
+textarea {
+    right: 0;
+    width: 49%;
+    height: 37vw;
+    box-sizing: border-box;
+    display: inline-block;
+}
+
+#chat {
+    height: calc(100% - 12vw);
+    width: 54%;
+    margin: 0;
+    position: fixed;
+    bottom: 3vw;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    border: 1px solid #707070;
+}
+
+button {
+    width: 7vw;
+    height: 3vw;
+    font-size: 1.2vw;
+}
+
+#form_div {
+
+    position: absolute;
+    width: 46%;
+    right: 0;
+
+}
+
+#not_available {
+    font-family: "appleNeoT";
+    font-size: 5vw;
+    color: red;
+    text-align: center;
+}
+
+#new_message {
+    display: none;
+    margin-left: 1vw;
+}
+
+.blink_yes {
+    color: white;
+}
+
+.blink_no {
+    color: blue;
+}
+
+@media(max-width:1024px) {
+    #chat {
+        height: calc(100% - 30vw);
+        bottom: 20vw;
+    }
+
+    textarea {
+        width: calc(100% - 13vw);
+        height: 20vw;
+    }
+
+    button {
+        width: 12vw;
+        height: 20vw;
+        font-size: 3vw;
+    }
+}
