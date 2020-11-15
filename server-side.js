@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
 
     socket.on('msg', (msg) => {
         console.log('익명' + socket.id + ' : ' + msg);
-        connection.query('INSERT INTO mujagi(id, ip,msg,date) VALUES("' + socket.id + '","' + socket.ip + '", "' + msg + '", "' + new Date().toLocaleString() + '")')
+        connection.query('INSERT INTO mujagi(id, ip,msg,date) VALUES(?, ?, ?, ?)', [socket.id, socket.ip, msg, new Date().toLocaleString()]);
         io.emit('msg', {
             id: socket.id,
             msg: msg
