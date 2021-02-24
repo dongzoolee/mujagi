@@ -1,34 +1,20 @@
-var express = require('express');
-var app = express();
-var cors = require('cors');
-var static = require('serve-static');
-var path = require('path');
-var fs = require('fs');
-var https = require('https');
+const express = require('express');
+const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 // mysql2
-var mysql = require('mysql2');
-var connection = mysql.createConnection({
-    host: 'leed.at',
-    user: '****',
-    password: '***',
-    database: '****'
+const mysql = require('mysql2');
+const connection = mysql.createConnection({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DB
 });
 connection.connect();
 
-try {
-    const option = {
-        cert: fs.readFileSync('./ssl/***.pem'),
-        key: fs.readFileSync('./ssl/***.pem')
-    };
-
-    var server = https.createServer(option, app);
-    server.listen(2222, () => {
-        console.log('https 서버 실행됨');
-    });
-} catch (err) {
-    console.error('error running https server');
-    console.warn(err);
-}
+const server = app.listen(2222, () => {
+    console.log('2222포트에서 mujagi 서버 실행됨');
+});
 
 var idx = 0;
 var socketio = require('socket.io');
@@ -43,11 +29,14 @@ io.on('connection', (socket) => {
         connection.query('SELECT EXISTS (SELECT id FROM mujagi_user WHERE ip = "' + ip + '") AS chk', (err, res, field) => {
             // console.log(res[0].chk)
             if (err) throw err;
-            if (!res[0].chk) {
-                socket.ip = ip;
-                socket.id = idx++;
-                socket.emit('query success');
-                connection.query('INSERT INTO mujagi_user(id, ip) VALUES("' + socket.id + '","' + ip + '")')
+            if (!res[0].chk) { // 없다면 
+                connection.query('INSERT INTO mujagi_user(ip) VALUES(?)', [ip], () => {
+                    connection.query('SELECT id FROM mujagi_user WHERE ip = "' + ip + '"', (err, res, field) => {
+                        socket.ip = ip;
+                        socket.id = res[0].id;
+                        socket.emit('query success');
+                    });
+                });
             } else {
                 connection.query('SELECT id, ip FROM mujagi_user WHERE ip = "' + ip + '"', (err, res, field) => {
                     // console.log(res[0].id);
@@ -75,7 +64,7 @@ io.on('connection', (socket) => {
 
     socket.on('msg', (msg) => {
         console.log('익명' + socket.id + ' : ' + msg);
-        connection.query('INSERT INTO mujagi(id, ip,msg,date) VALUES(?, ?, ?, ?)', [socket.id, socket.ip, msg, new Date().toLocaleString()]);
+        connection.query('INSERT INTO mujagi(id, ip,msg,date) VALUES(?, ?, ?, ?)', [socket.id, socket.ip, msg, new Date().toLocaleString()])
         io.emit('msg', {
             id: socket.id,
             msg: msg
@@ -86,6 +75,3 @@ io.on('connection', (socket) => {
 // require('dns').lookup(require('os').hostname(), function (err, add, fam) {
 //     console.log('addr: '+add);
 // })
-
-
-
